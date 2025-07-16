@@ -71,4 +71,24 @@ describe('Central de Atendimento ao Cliente TAT', () => {
     cy.get('input[name="phone"][type="number"]').clear()
     cy.get('input#phone').should('have.value', '')
   })
+
+  // Exercício extra 6
+  it('exibe mensagem de erro ao submeter o formulário sem preencher os campos obrigatórios', () => {
+    cy.get('button[type="submit"]').click()
+    cy.get('span[class="error"]').should('be.visible').and('contain', 'Valide os campos obrigatórios!')
+  })
+
+  // Exercício extra 7
+  it('envia o formuário com sucesso usando um comando customizado', () => {
+    cy.fillMandatoryFieldsAndSubmit()
+    cy.get('span[class="success"]').should('be.visible').and('contain', 'Mensagem enviada com sucesso.')
+  })
+
+  // Exercício extra 8
+  it('submete o formulário usando cy.contains para identificar o botão de envio', () => {
+    cy.fillMandatoryFields()
+    cy.contains('button', 'Enviar').click()
+    cy.contains('span', 'Mensagem enviada com sucesso.')
+  })
+
 })
