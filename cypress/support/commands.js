@@ -1,41 +1,34 @@
-// ***********************************************
-// This example commands.js shows you how to
-// create various custom commands and overwrite
-// existing commands.
-//
-// For more comprehensive examples of custom
-// commands please read more here:
-// https://on.cypress.io/custom-commands
-// ***********************************************
-//
-//
-// -- This is a parent command --
-// Cypress.Commands.add('login', (email, password) => { ... })
-//
-//
-// -- This is a child command --
-// Cypress.Commands.add('drag', { prevSubject: 'element'}, (subject, options) => { ... })
-//
-//
-// -- This is a dual command --
-// Cypress.Commands.add('dismiss', { prevSubject: 'optional'}, (subject, options) => { ... })
-//
-//
-// -- This will overwrite an existing command --
-// Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
+Cypress.Commands.add('fillMandatoryFieldsAndSubmit', (data = {}) => {
+  const defaultData = {
+    firstName: 'John',
+    lastName: 'Doe',
+    email: 'johndoe@example.com',
+    text: 'Test.'
+  }
+  // ... spread operator serve para espalhar o conteúdo de um objeto ou array dentro de outro.
+  // Utilizei o spread operator para mesclar os dados informados com os valores padrão, garantindo que nenhum campo obrigatório fique vazio mesmo que não seja explicitamente preenchido.
+  const formData = { ...defaultData, ...data }
 
-Cypress.Commands.add('fillMandatoryFieldsAndSubmit', () => {
-  cy.get('input[name="firstName"]').type('Victor')
-  cy.get('input[name="lastName"]').type('Lapa')
-  cy.get('input[name="email"][type="email"]').type('victor@email.com')
-  cy.get('textarea[name="open-text-area"]').type('Está tudo perfeito! Parabéns!')
+  cy.get('input[name="firstName"]').type(formData.firstName)
+  cy.get('input[name="lastName"]').type(formData.lastName)
+  cy.get('input[name="email"][type="email"]').type(formData.email)
+  cy.get('textarea[name="open-text-area"]').type(formData.text)
   cy.get('button[type="submit"]').click()
 })
 
-Cypress.Commands.add('fillMandatoryFields', () => {
-  cy.get('input[name="firstName"]').type('Victor')
-  cy.get('input[name="lastName"]').type('Lapa')
-  cy.get('input[name="email"][type="email"]').type('victor@email.com')
-  cy.get('textarea[name="open-text-area"]').type('Está tudo perfeito! Parabéns!')
+Cypress.Commands.add('fillMandatoryFields', (data = {}) => {
+  const defaultData = {
+    firstName: 'John',
+    lastName: 'Doe',
+    email: 'johndoe@example.com',
+    text: 'Test.'
+  }
+  const formData = { ...defaultData, ...data }
+
+  cy.get('input[name="firstName"]').type(formData.firstName)
+  cy.get('input[name="lastName"]').type(formData.lastName)
+  cy.get('input[name="email"][type="email"]').type(formData.email)
+  cy.get('textarea[name="open-text-area"]').type(formData.text)
 })
+
 

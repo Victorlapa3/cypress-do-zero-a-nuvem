@@ -1,27 +1,23 @@
 describe('Central de Atendimento ao Cliente TAT', () => {
   beforeEach(() => cy.visit('./src/index.html'))
 
-  // Exercício 01
   it('verifica o título da aplicação', () => {
     cy.title().should('eq', 'Central de Atendimento ao Cliente TAT')
   })
 
-  // Exercício 02
   it('preenche os campos obrigatórios e envia o formulário', () => {
     cy.get('input[name="firstName"]').type('Victor')
     cy.get('input[name="lastName"]').type('Lapa')
     cy.get('input[name="email"][type="email"]').type('victorlapa@gmail.com')
     cy.get('select#product').select('Blog')
 
-    // Exercício extra 1 (inserindo delay por tecla em milissegundo)
+    // (inserindo delay por tecla em milissegundo)
     cy.get('textarea[name="open-text-area"]').type('Está tudo perfeito! Parabéns!', { delay: 50 })
 
-    // Continuação do Exercício 02   
     cy.get('button[type="submit"]').click()
     cy.get('span[class="success"]').should('be.visible').and('contain', 'Mensagem enviada com sucesso.')
   })
 
-  // Exercício extra 2
   it('exibe mensagem de erro ao submeter o formulário com um email com formatação inválida', () => {
     cy.get('input[name="firstName"]').type('Victor')
     cy.get('input[name="lastName"]').type('Lapa')
@@ -31,13 +27,10 @@ describe('Central de Atendimento ao Cliente TAT', () => {
     cy.get('span[class="error"]').should('be.visible').and('contain', 'Valide os campos obrigatórios!')
   })
 
-  // Exercício extra 3
   it('não permite a entrada de caracteres não numéricos no campo de telefone', () => {
-    cy.get('input#phone').type('teste!@#%')
-    cy.get('input#phone').should('have.value', '')
+    cy.get('input#phone').type('teste!@#%').should('have.value', '')
   })
 
-  // Exercício extra 4
   it('exibe mensagem de erro quando o telefone se torna obrigatório mas não é preenchido antes do envio do formulário', () => {
     cy.get('input[name="firstName"]').type('Victor')
     cy.get('input[name="lastName"]').type('Lapa')
@@ -49,7 +42,6 @@ describe('Central de Atendimento ao Cliente TAT', () => {
     cy.get('span[class="error"]').should('be.visible').and('contain', 'Valide os campos obrigatórios!')
   })
 
-  // Exercício extra 5
   it('preenche e limpa os campos nome, sobrenome, email e telefone', () => {
     cy.get('input[name="firstName"]').type('Victor')
     cy.get('input#firstName').should('have.value', 'Victor')
@@ -72,23 +64,48 @@ describe('Central de Atendimento ao Cliente TAT', () => {
     cy.get('input#phone').should('have.value', '')
   })
 
-  // Exercício extra 6
   it('exibe mensagem de erro ao submeter o formulário sem preencher os campos obrigatórios', () => {
     cy.get('button[type="submit"]').click()
     cy.get('span[class="error"]').should('be.visible').and('contain', 'Valide os campos obrigatórios!')
   })
 
-  // Exercício extra 7
   it('envia o formuário com sucesso usando um comando customizado', () => {
     cy.fillMandatoryFieldsAndSubmit()
     cy.get('span[class="success"]').should('be.visible').and('contain', 'Mensagem enviada com sucesso.')
   })
 
-  // Exercício extra 8
   it('submete o formulário usando cy.contains para identificar o botão de envio', () => {
-    cy.fillMandatoryFields()
+    const data = {
+      firstName: 'Victor',
+      lastName: 'Lapa',
+      // email e text serão preenchidos com os valores padrão
+    }
+
+    cy.fillMandatoryFields(data)
     cy.contains('button', 'Enviar').click()
     cy.contains('span', 'Mensagem enviada com sucesso.')
+  })
+
+  it('seleciona um produto (YouTube) por seu texto', () => {
+    cy.get('select#product').select('YouTube').should('have.value', 'youtube')
+  })
+
+  it('seleciona um produto (Mentoria) por seu valor (value)', () => {
+    cy.get('select#product').select('mentoria').should('have.value', 'mentoria')
+  })
+
+  it('seleciona um produto (Blog) por seu índice', () => {
+    cy.get('select#product').select(1).should('have.value', 'blog')
+  })
+
+  it('marca o tipo de atendimento "Feedback"', () => {
+    cy.get('[type="radio"][value=feedback]').check().should('have.value', 'feedback')
+  })
+
+  it.only('marca cada tipo de atendimento', () => {
+    cy.get('[type="radio"]').each(typeofService => {
+      cy.wrap(typeofService).check().should('be.checked')
+    })
   })
 
 })
